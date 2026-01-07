@@ -26,8 +26,8 @@ app.listen(port, () => {
     console.log('Server running on port', port);
 });
 
-//Example Route: Get all cards
-app.get('/allcharacters', async (req, res) => {
+//all
+app.get('/characters', async (req, res) => {
     try {
         let connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM defaultdb.HSR');
@@ -38,7 +38,7 @@ app.get('/allcharacters', async (req, res) => {
     }
 });
 
-//Example Route: Create a new card
+//add
 app.post('/addcharacter', async (req, res) => {
     const {name, combat_type, combat_path, rarity, character_pic} = req.body;
     try {
