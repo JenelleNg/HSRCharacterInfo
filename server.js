@@ -52,3 +52,42 @@ app.post('/addcharacter', async (req, res) => {
         res.status(500).json({ message: "Server error - could not add character's info "+name });
     }
 });
+
+//updating
+app.put('/updatecharacter/:id', async (req, res) => {
+    const characterId = req.params.id;
+    const { name, combat_type, combat_path, rarity, character_pic } = req.body;
+
+    try {
+        let connection = await mysql.createConnection(dbConfig);
+
+        await connection.execute(
+            'UPDATE HSR SET name = ?, combat_type = ?, combat_path = ?, rarity = ?, character_pic = ? WHERE id = ?',
+            [name, combat_type, combat_path, rarity, character_pic, characterId]
+        );
+
+        res.json({ message: 'Character updated successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error - could not update character' });
+    }
+});
+
+//deleting
+app.delete('/deletecharacter/:id', async (req, res) => {
+    const characterId = req.params.id;
+
+    try {
+        let connection = await mysql.createConnection(dbConfig);
+
+        await connection.execute(
+            'DELETE FROM HSR WHERE id = ?',
+            [characterId]
+        );
+
+        res.json({ message: 'Character deleted successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error - could not delete character' });
+    }
+});
