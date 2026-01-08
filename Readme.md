@@ -11,16 +11,20 @@ https://hsrcharacterinfo.onrender.com/addcharacter
 "name": "The Herta",
 "combat_type": "ice",
 "combat_path": "Erudition",
-"Rarity": 5,
+"rarity": 5,
 "character_pic": "https://static.wikia.nocookie.net/houkai-star-rail/images/4/42/Character_The_Herta_Splash_Art.png/revision/latest/scale-to-width-down/1000?cb=20250121214107"
 }
 
 Update Character:
-https://hsrcharacterinfo.onrender.com/updatecharacter
-
-Delete Character:
-https://hsrcharacterinfo.onrender.com/deletecharacter
+https://hsrcharacterinfo.onrender.com/updatecharacter/:id
 
 {
-"id": 3
+"name": "Herta",
+"combat_type": "ice",
+"combat_path": "Erudition",
+"rarity": 4,
+"character_pic": "https://static.wikia.nocookie.net/houkai-star-rail/images/8/8c/Character_Herta_Splash_Art.png/revision/latest/scale-to-width-down/1000?cb=20230216231220"
 }
+
+Delete Character:
+https://hsrcharacterinfo.onrender.com/deletecharacter/:id
