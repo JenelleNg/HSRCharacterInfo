@@ -54,40 +54,40 @@ app.post('/addcharacter', async (req, res) => {
 });
 
 //updating
+// Update a character
 app.put('/updatecharacter/:id', async (req, res) => {
-    const characterId = req.params.id;
+    const { id } = req.params;
     const { name, combat_type, combat_path, rarity, character_pic } = req.body;
 
     try {
         let connection = await mysql.createConnection(dbConfig);
-
         await connection.execute(
-            'UPDATE HSR SET name = ?, combat_type = ?, combat_path = ?, rarity = ?, character_pic = ? WHERE id = ?',
-            [name, combat_type, combat_path, rarity, character_pic, characterId]
+            `UPDATE characters 
+             SET name=?, combat_type=?, combat_path=?, rarity=?, character_pic=? 
+             WHERE id=?`,
+            [name, combat_type, combat_path, rarity, character_pic, id]
         );
-
-        res.json({ message: 'Character updated successfully' });
+        res.status(201).json({ message: 'Character ' + id + ' updated successfully!' });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Server error - could not update character' });
+        res.status(500).json({ message: 'Server error - could not update character ' + id });
     }
 });
 
-//deleting
+// Delete a character
 app.delete('/deletecharacter/:id', async (req, res) => {
-    const characterId = req.params.id;
+    const { id } = req.params;
 
     try {
         let connection = await mysql.createConnection(dbConfig);
-
         await connection.execute(
-            'DELETE FROM HSR WHERE id = ?',
-            [characterId]
+            'DELETE FROM characters WHERE id=?',
+            [id]
         );
-
-        res.json({ message: 'Character deleted successfully' });
+        res.status(201).json({ message: 'Character ' + id + ' deleted successfully!' });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Server error - could not delete character' });
+        res.status(500).json({ message: 'Server error - could not delete character ' + id });
     }
 });
+
