@@ -1,10 +1,8 @@
-// include the required packages
 const express = require('express');
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 const port = 3000;
 
-//database config info
 const dbConfig = {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -16,45 +14,40 @@ const dbConfig = {
     queueLimit: 0,
 };
 
-//initialise Express app
 const app = express();
-//helps app to read JSON
 app.use(express.json());
 
-//start the server
-app.listen(port, () => {
-    console.log('Server running on port', port);
-});
+app.listen(port, () => console.log('Server running on port', port));
 
-//all
+// Get all characters
 app.get('/characters', async (req, res) => {
     try {
         let connection = await mysql.createConnection(dbConfig);
-        const [rows] = await connection.execute('SELECT * FROM defaultdb.HSR');
+        const [rows] = await connection.execute('SELECT * FROM HSR');
         res.json(rows);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Server error for all characters'});
+        res.status(500).json({ message: 'Server error for all characters' });
     }
 });
 
-//add
+// Add character
 app.post('/addcharacter', async (req, res) => {
-    const {name, combat_type, combat_path, rarity, character_pic} = req.body;
+    const { name, combat_type, combat_path, rarity, character_pic } = req.body;
     try {
         let connection = await mysql.createConnection(dbConfig);
         await connection.execute(
             'INSERT INTO HSR (name, combat_type, combat_path, rarity, character_pic) VALUES (?, ?, ?, ?, ?)',
             [name, combat_type, combat_path, rarity, character_pic]
         );
+        res.status(201).json({ message: "Character added successfully!" });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "Server error - could not add character's info "+name });
+        res.status(500).json({ message: "Server error - could not add character " + name });
     }
 });
 
-//updating
-// Update a character
+// Update character
 app.put('/updatecharacter/:id', async (req, res) => {
     const { id } = req.params;
     const { name, combat_type, combat_path, rarity, character_pic } = req.body;
@@ -62,9 +55,7 @@ app.put('/updatecharacter/:id', async (req, res) => {
     try {
         let connection = await mysql.createConnection(dbConfig);
         await connection.execute(
-            `UPDATE characters 
-             SET name=?, combat_type=?, combat_path=?, rarity=?, character_pic=? 
-             WHERE id=?`,
+            'UPDATE HSR SET name=?, combat_type=?, combat_path=?, rarity=?, character_pic=? WHERE id=?',
             [name, combat_type, combat_path, rarity, character_pic, id]
         );
         res.status(201).json({ message: 'Character ' + id + ' updated successfully!' });
@@ -74,20 +65,16 @@ app.put('/updatecharacter/:id', async (req, res) => {
     }
 });
 
-// Delete a character
+// Delete character
 app.delete('/deletecharacter/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
         let connection = await mysql.createConnection(dbConfig);
-        await connection.execute(
-            'DELETE FROM characters WHERE id=?',
-            [id]
-        );
+        await connection.execute('DELETE FROM HSR WHERE id=?', [id]);
         res.status(201).json({ message: 'Character ' + id + ' deleted successfully!' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error - could not delete character ' + id });
     }
 });
-
